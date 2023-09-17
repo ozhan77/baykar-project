@@ -23,8 +23,23 @@ def createListing(request):
         weight = request.POST["weight"]
         imageUrl = request.POST["imageUrl"]
         price = request.POST["price"]
-        price = request.POST["price"]
-        owner = request.POST["owner"]
+        category = request.POST["category"]
+        currentUser = request.user
+
+        categoryData =Category.objects.get(categoryName=category)
+
+        newListing = Listing(
+            brand=brand,
+            model=model,
+            description=description,
+            weight=float(weight),
+            imageUrl=imageUrl,
+            price=float(price),
+            category=categoryData,
+            owner=currentUser
+        )
+        newListing.save()
+        return HttpResponseRedirect(reverse(index))
 
 def login_view(request):
     if request.method == "POST":
