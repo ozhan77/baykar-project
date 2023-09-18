@@ -5,7 +5,9 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-
+class Logs(models.Model):
+    transaction = models.CharField(max_length=200)
+    #tarih
 class Category(models.Model):
     categoryName = models.CharField(max_length=50)
     def __str__(self):

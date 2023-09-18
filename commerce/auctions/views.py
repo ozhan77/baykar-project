@@ -1,14 +1,43 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.urls import reverse
 
-from .models import User,Category,Listing
+from .models import User,Category,Listing,Logs
+from .forms import ProductForm
+
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    activeListing =Listing.objects.filter(isActive=True)
+    allCategories = Category.objects.all()
+    return render(request, "auctions/index.html",{
+        "listings":activeListing,
+        "categories":allCategories
+    })
+
+def displayCategory(request):
+    if request.method == "POST":
+        categoryFromForm = request.POST['category']
+        category = Category.objects.get(categoryName=categoryFromForm)
+        activeListing =Listing.objects.filter(isActive=True, category=category)
+        allCategories = Category.objects.all()
+        return render(request, "auctions/index.html",{
+            "listings":activeListing,
+            "categories":allCategories
+        })
+
+def listing(request,id):
+    listingData = Listing.objects.get(pk=id)
+    return render(request, "auctions/listing.html",{
+        "listing":listingData
+    })
+
+def deleteListing(request,id):
+    listingData = Listing.objects.get(pk=id)
+    listingData.delete()
+    return redirect('index')
 
 def createListing(request):
     if request.method == "GET":
@@ -39,7 +68,30 @@ def createListing(request):
             owner=currentUser
         )
         newListing.save()
+        newLog = Logs(
+            transaction= str(currentUser) + " add new vehicle " +str(model)
+        )
+        newLog.save()
+
         return HttpResponseRedirect(reverse(index))
+
+def updateListing(request,id):
+    listingData = Listing.objects.get(pk=id)
+    allCategories = Category.objects.all()
+    form= ProductForm(instance=listingData)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=listingData)
+        if form.is_valid():
+            listingData = form.save(commit=False)
+            listingData.last_updated_by = request.user  # En son güncelleyen kullanıcıyı ayarla
+            listingData.save()
+            return redirect('index')
+    context = {
+        "categories":allCategories,
+        "form":form
+    }
+    return render(request, 'auctions/update.html', context)
+    
 
 def login_view(request):
     if request.method == "POST":

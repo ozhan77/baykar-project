@@ -2,8 +2,9 @@
 
 {% block body %}
     <h2>Create New Listings</h2>
-    {% csrf_token %}
+    
     <form action="{%url 'create'%}" method="POST">
+        {% csrf_token %}
         <div class="mb-3">
             <label for="brand" class="form-label">Brand</label>
             <input type="text" class="form-control" name="brand" id="brand" placeholder="Brand">

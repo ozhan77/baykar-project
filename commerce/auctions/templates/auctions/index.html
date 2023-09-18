@@ -1,7 +1,30 @@
-{% extends "auctions/layout.html" %}
-
+{% extends "auctions/layout.html" %} 
 {% block body %}
-    <h2>Active Listings</h2>
+<h2>Active Listings</h2>
 
-    TODO
+    <form action="{% url "displayCategory" %}" method="POST">
+        {% csrf_token %}
+        <label for="category">Choose a category:</label>
+        <select name="category" id="category">
+        {% for category in categories %}
+        <option value="{{category}}">{{category}}</option>
+        {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-info">Info</button>
+    </form>
+    <div class="row mx-3">
+        {% for listing in listings %}
+            <div class="card" style="width: 18rem">
+                <img src="{{listing.imageUrl}}" class="card-img-top" alt="{{listing.model}}" />
+                <div class="card-body">
+                    <h5 class="card-title">{{listing.brand}}</h5>
+                    <p class="card-text">
+                    {{listing.brand}}
+                    </p>
+                    <a href="{% url "listing" id=listing.id %}" class="btn btn-primary">İncele</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     
 {% endblock %}
