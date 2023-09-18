@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 
 from . import views
 
@@ -12,4 +12,7 @@ urlpatterns = [
     path("listing/<int:id>",views.listing,name="listing"),
     path("updateListing/<int:id>/",views.updateListing,name="updateListing"),
     path("deleteListing/<int:id>/",views.deleteListing,name="deleteListing"),
+    path("rentListing/<int:id>/",views.rentListing,name="rentListing"),
+    path("showRentList", views.showRentList, name="showRentList"),
+    path('api/', include('auctions.api.urls'))
 ]

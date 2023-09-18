@@ -3,8 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
-
-from .models import User,Category,Listing,Logs
+from datetime import datetime
+from .models import User,Category,Listing,Logs,Rentlist
 from .forms import ProductForm
 
 
@@ -83,7 +83,7 @@ def updateListing(request,id):
         form = ProductForm(request.POST, request.FILES, instance=listingData)
         if form.is_valid():
             listingData = form.save(commit=False)
-            listingData.owner = request.user  # En son güncelleyen kullanıcıyı ayarla
+            listingData.owner = request.user
             listingData.save()
             return redirect('index')
     context = {
@@ -92,6 +92,36 @@ def updateListing(request,id):
     }
     return render(request, 'auctions/update.html', context)
     
+def rentListing(request,id):
+    listingData = Listing.objects.get(pk=id)
+    if request.method == 'POST':
+        rent_date = request.POST.get('rentDate')
+        returnRentDate = request.POST.get('returnRentDate')
+        listingData.rented = datetime.strptime(rent_date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        listingData.isActive=False
+        listingData.owner = request.user
+        listingData.save()
+        newRented = Rentlist(
+            customer=str(request.user),
+            iha="iha id:"+str(id)+" model:"+listingData.model,
+            rentStartDate=datetime.strptime(rent_date, '%m/%d/%Y').strftime('%Y-%m-%d'),
+            rentFinishDate=datetime.strptime(returnRentDate, '%m/%d/%Y').strftime('%Y-%m-%d'),
+            date=datetime.now()
+        )
+        newRented.save()
+        return redirect('index')
+        
+
+    return render(request, 'auctions/rentcheckout.html',{
+        "listing":listingData
+    })
+
+def showRentList(request):
+    rentRequests=Rentlist.objects.all()
+    return render(request, "auctions/rentrequest.html",{
+        "rentRequests":rentRequests,
+        
+    })
 
 def login_view(request):
     if request.method == "POST":

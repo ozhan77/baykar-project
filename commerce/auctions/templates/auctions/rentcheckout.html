@@ -19,15 +19,14 @@
         }
         
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery kütüphanesi -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> <!-- jQuery UI kütüphanesi -->
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
     $(function() {
         $("#rentDate").datepicker(); 
+        $("#returnRentDate").datepicker();
         $("#rentButton").click(function() {
             var selectedDate = $("#rentDate").val();
-            alert("Seçilen Tarih: " + selectedDate);
         });
     });
     </script>
@@ -37,9 +36,12 @@
     <img src="{{listing.imageUrl}}" height="400px">
     <p>{{listing.description}}</p>
     <h4>{{listing.price}}₺</h4>
-        <a href="{% url "rentListing" id=listing.id%}" class="btn btn-success m-1">Kirala</a>
-        {% if user.is_authenticated %}
-        <a href="{% url "deleteListing" id=listing.id%}" class="btn btn-danger m-1">Sil</a>
-        <a href="{% url "updateListing" id=listing.id%}" class="btn btn-primary m-1">Güncelle</a>
-        {% endif %}
+    {% if user.is_authenticated %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" id="rentDate" name="rentDate" placeholder="Kiralama Başlangıç Tarihi Seçin">
+        <input type="text" id="returnRentDate" name="returnRentDate" placeholder="Kiralama Bitiş Tarihi Seçin">
+        <button type="submit" id="rentButton" class="btn btn-success m-1">Kirala</button>
+    </form>
+    {% endif %}
 {% endblock  %}
