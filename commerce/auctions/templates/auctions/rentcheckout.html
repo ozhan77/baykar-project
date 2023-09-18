@@ -39,9 +39,9 @@
     {% if user.is_authenticated %}
     <form method="POST">
         {% csrf_token %}
-        <input type="text" id="rentDate" name="rentDate" placeholder="Kiralama Başlangıç Tarihi Seçin">
-        <input type="text" id="returnRentDate" name="returnRentDate" placeholder="Kiralama Bitiş Tarihi Seçin">
-        <button type="submit" id="rentButton" class="btn btn-success m-1">Kirala</button>
+        <input type="text" id="rentDate" name="rentDate" placeholder="Rent start date">
+        <input type="text" id="returnRentDate" name="returnRentDate" placeholder="Rent finish date">
+        <button type="submit" id="rentButton" class="btn btn-success m-1">Rent</button>
     </form>
     {% endif %}
 {% endblock  %}

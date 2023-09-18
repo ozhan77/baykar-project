@@ -10,7 +10,7 @@
         <option value="{{category}}">{{category}}</option>
         {% endfor %}
         </select>
-        <button type="submit" class="btn btn-info">Info</button>
+        <button type="submit" class="btn btn-info">Filter</button>
     </form>
     <div class="row mx-3">
         {% for listing in listings %}
@@ -21,7 +21,7 @@
                     <p class="card-text">
                     {{listing.brand}}
                     </p>
-                    <a href="{% url "listing" id=listing.id %}" class="btn btn-primary">İncele</a>
+                    <a href="{% url "listing" id=listing.id %}" class="btn btn-primary">Detail</a>
                 </div>
             </div>
         {% endfor %}

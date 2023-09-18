@@ -37,9 +37,9 @@
     <img src="{{listing.imageUrl}}" height="400px">
     <p>{{listing.description}}</p>
     <h4>{{listing.price}}₺</h4>
-        <a href="{% url "rentListing" id=listing.id%}" class="btn btn-success m-1">Kirala</a>
+        <a href="{% url "rentListing" id=listing.id%}" class="btn btn-success m-1">Rent</a>
         {% if user.is_authenticated %}
-        <a href="{% url "deleteListing" id=listing.id%}" class="btn btn-danger m-1">Sil</a>
-        <a href="{% url "updateListing" id=listing.id%}" class="btn btn-primary m-1">Güncelle</a>
+        <a href="{% url "deleteListing" id=listing.id%}" class="btn btn-danger m-1">Delete</a>
+        <a href="{% url "updateListing" id=listing.id%}" class="btn btn-primary m-1">Update</a>
         {% endif %}
 {% endblock  %}
