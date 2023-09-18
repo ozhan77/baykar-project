@@ -83,7 +83,7 @@ def updateListing(request,id):
         form = ProductForm(request.POST, request.FILES, instance=listingData)
         if form.is_valid():
             listingData = form.save(commit=False)
-            listingData.last_updated_by = request.user  # En son güncelleyen kullanıcıyı ayarla
+            listingData.owner = request.user  # En son güncelleyen kullanıcıyı ayarla
             listingData.save()
             return redirect('index')
     context = {
